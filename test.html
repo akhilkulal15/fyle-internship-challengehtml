@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Repos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<script>
+    const token = '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';
+    $(document).ready(function(){
+        $.get({url:'https://api.github.com/users/johnpapa',success:function(data,status){
+            var name = data.name;
+            var bio = data.bio;
+            var twitter = 'https://twitter.com/'+data.twitter_username;
+            var github = data.html_url;
+            var image = data.avatar_url;
+            var location = data.location;
+            $('#host').text(JSON.stringify(data))
+            document.getElementById('image').src= image;
+            $('#name').text(name)
+            $('#bio').text(bio)
+            $('#location').text(location)
+            $('#twitter').text(twitter)
+            $('#github').text(github)
+        },dataType:"json"});
+
+    })
+</script>
+<body>
+    <div class="details">
+    <div class="card border-top-0">
+            <img class="card-image" id="image">
+        <div class="card-body">
+            <div id="name" class="card-title bold h3"></div>
+            <div id="bio"></div>
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+              </svg><div id="location"></div></span>
+              <div id="twitter"></div>
+        </div>
+    </div>
+    <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
+      </svg><div id="github"></div></span>
+    </div>
+      
+      <div class="repos">
+            <script>
+                $.get({url:'https://api.github.com/users/johnpapa/repos',success:function(data,status){
+                    var da = data;
+                    console.log(data.length)
+                    var container = document.getElementsByClassName('repos');
+                    var i = 0;
+                    var repo1 = {name:'Akhil',desc:'ala',language:'English'}
+                    var repo2 = {name:'Akhil',desc:'ala',language:'English'}
+                    /*var card = `<div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card" id="card1">
+                <div class="card-body">
+                    <h1 class="card-title text-info">${repo1.name}</h1>
+                    <h6 class="card-text">${repo1.desc}</h6>
+                    <span class="badge text-bg-primary">${repo1.language}</span>
+                </div>
+          </div>
+        </div> 
+        <div class="col-md-6 ml-md-3">
+            <div class="card" id="card2">
+                <div class="card-body">
+                    <h1 class="card-title text-info">${repo2.name}</h1>
+                    <h6 class="card-text">${repo2.desc}</h6>
+                    <span class="badge text-bg-primary">${repo2.language}</span>
+                </div>
+          </div>
+        </div>
+     </div>`*/
+                    while(i != data.length){
+                        var card = `<div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card" id="card1">
+                <div class="card-body">
+                    <h1 class="card-title text-info">${data[i].name}</h1>
+                    <h6 class="card-text">${data[i].description}</h6>`+
+                    $.get({url:data[i].languages_url,success:function(data,status){
+                        console.log(data)
+                        var lang = Object.keys(data);
+                        console.log(lang)
+                    },dataType:'json'})+
+                `</div>
+          </div>
+        </div> 
+        <div class="col-md-6 ml-md-3">
+            <div class="card" id="card2">
+                <div class="card-body">
+                    <h1 class="card-title text-info">${data[i+1].name}</h1>
+                    <h6 class="card-text">${data[i+1].description}</h6>
+                    <span class="badge text-bg-primary">${data[i].language}</span>
+                </div>
+          </div>
+        </div>
+     </div>`
+     console.log(card)
+                        var rowE = document.createElement('div');
+                        //rowE.innerHTML = card.trim();
+                        
+                    }
+                },dataType:"json"}).done(function(){
+                    console.log('done repo')
+                })
+                
+            </script>
+      </div>
+
+      <nav aria-label="page navigation">
+        <ul class="pagination justify-content-center">
+            <script>
+                
+            </script>
+            <li class="page-item"><a href="#" class="page-link"><span aria-hidden="true">&laquo;</span></a></li>
+            <li class="page-item"><a href="#" class="page-link"><span aria-hidden="true">&raquo;</span></a></li>
+             
+        </ul>
+      </nav>
+</body>
+</html> 

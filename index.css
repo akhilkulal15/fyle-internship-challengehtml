@@ -1,0 +1,63 @@
+.details .card{
+    flex-direction: row;
+    border: none;
+}
+.details .card #name{
+    margin-top: 10px;
+}
+.details .card img{
+    margin-top: 15px;
+    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+    margin-left: 30px;
+}
+.details .card span div{
+    display: inline-block;
+    margin-bottom: -105px;
+}
+.details .card #bio{
+    margin-top: 15px;
+}
+
+.details .card #location{
+    margin-top: 15px;
+}
+
+.details .card #twitter{
+    margin-top: 19px;
+}
+
+.details span{
+    margin-left: 15px;
+}
+.details span div{
+    display: inline-block;
+    
+}
+
+.badge{
+    font-size: 15px;
+}
+
+.row .col-md-6 #card1{
+    margin-left: 15px;
+}
+
+.row .col-md-6 #card2{
+    margin-right: 15px;
+}
+
+.repos{
+    margin-top: 100px;
+}
+
+.row{
+    position:relative;
+}
+
+.disabled{
+    color:gray;
+    pointer-events: none;
+    cursor: default;
+}

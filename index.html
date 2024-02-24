@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitRepos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<script>
+    var currPage = 1;
+    $.get({url:'https://api.github.com/users/johnpapa',success:function(data,status){
+        var details = {"name":data.name,"bio":data.bio,"image":data.avatar_url,"location":data.location,"github":data.html_url,"twitter":'https://twitter.com/'+data.twitter_username};
+        document.getElementById('image').src= details.image;
+        $('#name').text(details.name);
+        $('#bio').text(details.bio);
+        $('#location').text(details.location);
+        $('#twitter').text(details.twitter);
+        $('#github').text(details.github);
+    }})
+</script>
+
+<script>
+    function cardCreator(name,desc,languages){
+        var li = ``;
+        for(var i in languages){
+            li += `<span class="badge text-bg-primary">${languages[i]}</span>`
+        }
+        return `<div class="card" id="card1">
+                <div class="card-body">
+                    <div class="card-title text-info h2">${name}</div>
+                    <div class="card-text">${desc}</div>
+                    <div class="col">
+                        ${li}
+                    </div>
+                </div>
+            </div>`
+    }
+
+    function listRepos(pages=10,currPage){
+        if(pages == 0){
+            pages = 10;
+        }
+        var i = (currPage-1)*pages;
+        var j = (currPage)*pages-1;
+        var repoList = document.getElementsByClassName('repos');
+        console.log(repoList,document.getElementById('reposList'))
+            }
+
+    function pagination(pages=10,currPage){
+        $.get({url:'https://api.github.com/users/johnpapa/repos',success:function(data,status){
+            var page = document.getElementById('pagination');
+            var list = document.createElement('ul');
+            list.classList.add('pagination');
+            list.classList.add('justify-content-center')
+            var pageCounts = data.length/pages;
+            var count = 0;
+            if(Number.isInteger(pageCounts)){
+                count = pageCounts;
+            }
+            else if(!isNaN(pageCounts) && Number.toString(pageCounts).includes('.')){
+                count = pageCounts+1;
+            }
+            for(var i = 0; i < count+2; i++){
+                var listItem = document.createElement('li');
+                var anchor = document.createElement('a');
+                var spanItem = document.createElement('span');
+                listItem.classList.add('page-item');
+                anchor.classList.add('page-link');
+                if(i == 0){
+                    spanItem.appendChild(document.createTextNode('\u00AB'));
+                    anchor.addEventListener('click',function(){
+                        if(currPage == 2){
+                            anchor.classList.add('disabled');
+                        }
+                        currPage--;
+                        if(currPage >= 2){
+                            anchor.classList.remove('disabled');
+                        }
+                        listRepos(10,currPage);
+                    })
+                }
+                else if(i == count+1){
+                    spanItem.appendChild(document.createTextNode('\u00BB'));
+                    anchor.addEventListener('click',function(event){
+                        if(currPage == count){
+                            anchor.classList.add('disabled');
+                        }
+                        currPage++;
+                        if(currPage <= count){
+                            anchor.classList.remove('disabled');
+                        }
+                        listRepos(10,currPage)
+                    })
+                    console.log
+                    
+                }
+                else{
+                    spanItem.textContent = i;
+                    anchor.addEventListener('click',function(event){
+                        currPage = i;
+                        listRepos(10,currPage);
+                    })
+                    
+                }
+                anchor.appendChild(spanItem);
+                listItem.appendChild(anchor);
+                list.appendChild(listItem);
+            }
+            page.appendChild(list);
+
+        }})
+    }
+
+    pagination(10)
+    const card = cardCreator('Akhil','My project',['English','Hindi']);
+    console.log(card)   
+   listRepos(10,1)
+    
+</script>
+<body>
+    <div class="details">
+        <div class="card">
+            <img  class="card-image" id="image"/>
+            <div class="card-body">
+                <div id="name" class="card-title bold h3"></div>
+                <div id="bio"></div>
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"    class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                  </svg><div id="location"></div></span>
+                <div id="twitter"></div>
+            </div>
+        </div>
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+            <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+            <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
+          </svg><div id="github"></div></span>
+    </div>
+    <div class="repos" id="reposList">
+            </div>
+
+
+    <!--pagination-->
+
+    <div class="justify-content-center" id="pagination"></div>
+    
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card" id="card1">
+                <div class="card-body">
+                    <div class="card-title text-info h2">Repo Name</div>
+                    <div class="card-text">Repo Desc</div>
+                    <div class="col">
+                        <span class="badge text-bg-primary">English</span>
+                        <span class="badge text-bg-primary">Hindi</span>
+                        <span class="badge text-bg-primary">English</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-6 mx-auto">
+            <div class="card" id="card2">
+                <div class="card-body">
+                    <div class="card-title text-info h2">Repo Name</div>
+                    <div class="card-text">Repo Desc</div>
+                    <div class="col">
+                        <span class="badge text-bg-primary">English</span>
+                        <span class="badge text-bg-primary">Hindi</span>
+                        <span class="badge text-bg-primary">English</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        
+
+    </script>
+</body>
+</html>
